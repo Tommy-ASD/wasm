@@ -3,6 +3,11 @@ use yew::prelude::*;
 enum Msg {
     AddOne,
     ChText,
+    ThingCopied,
+    ThingDropped,
+    ThingDragged,
+    ThingClicked,
+    ThingOver,
 }
 
 struct Model {
@@ -36,6 +41,26 @@ impl Component for Model {
                 self.input_counter += 1;
                 true
             }
+            Msg::ThingCopied => {
+                self.on_input_test = String::from("copied");
+                true
+            }
+            Msg::ThingDragged => {
+                self.on_input_test = String::from("dragged");
+                true
+            }
+            Msg::ThingDropped => {
+                self.on_input_test = String::from("dropped");
+                true
+            }
+            Msg::ThingClicked => {
+                self.on_input_test = String::from("clicked");
+                true
+            }
+            Msg::ThingOver => {
+                self.on_input_test = String::from("over");
+                true
+            }
         }
     }
 
@@ -46,8 +71,16 @@ impl Component for Model {
             <div>
                 <button onclick={link.callback(|_| Msg::AddOne)}>{ "+1" }</button>
                 <p>{ self.value }</p>
-                <input type="text" value="he he he haw" oninput={link.callback(|_| Msg::ChText)} />
-                <p>{ format!("{} {}", &self.on_input_test, &self.input_counter) }</p>
+                <input type="text" placeholder="he he he haw" oninput={link.callback(|_| Msg::ChText)} />
+                <p 
+                onclick = {link.callback(|_| Msg::ThingClicked)} 
+                oncopy={link.callback(|_| Msg::ThingCopied)}
+                ondrag={link.callback(|_| Msg::ThingDragged)}
+                ondrop={link.callback(|_| Msg::ThingDropped)}
+                onmouseover={link.callback(|_| Msg::ThingOver)}
+                >
+                { format!("{} {}", &self.on_input_test, &self.input_counter) }
+                </p>
             </div>
         }
     }
