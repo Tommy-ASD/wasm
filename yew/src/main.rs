@@ -5,9 +5,12 @@ enum Msg {
     ChText,
     ThingCopied,
     ThingDropped,
+    ThingDragStart,
     ThingDragged,
     ThingClicked,
     ThingOver,
+    ThingWheeled,
+    ThingSubmitted,
 }
 
 struct Model {
@@ -61,6 +64,18 @@ impl Component for Model {
                 self.on_input_test = String::from("over");
                 true
             }
+            Msg::ThingWheeled => {
+                self.on_input_test = String::from("wheeled");
+                true
+            }
+            Msg::ThingDragStart => {
+                self.on_input_test = String::from("dragstart");
+                true
+            }
+            Msg::ThingSubmitted => {
+                self.on_input_test = String::from("submitted");
+                true
+            }
         }
     }
 
@@ -69,18 +84,26 @@ impl Component for Model {
         let link = ctx.link();
         html! {
             <div>
-                <button onclick={link.callback(|_| Msg::AddOne)}>{ "+1" }</button>
+                <button 
+                onsubmit={link.callback(|_| Msg::ThingSubmitted)}
+                onclick={link.callback(|_| Msg::AddOne)}
+                >
+                { "+1" }
+                </button>
                 <p>{ self.value }</p>
                 <input type="text" placeholder="he he he haw" oninput={link.callback(|_| Msg::ChText)} />
                 <p 
                 onclick = {link.callback(|_| Msg::ThingClicked)} 
                 oncopy={link.callback(|_| Msg::ThingCopied)}
                 ondrag={link.callback(|_| Msg::ThingDragged)}
+                ondragstart={link.callback(|_| Msg::ThingDragStart)}
                 ondrop={link.callback(|_| Msg::ThingDropped)}
                 onmouseover={link.callback(|_| Msg::ThingOver)}
+                onwheel={link.callback(|_| Msg::ThingWheeled)}
                 >
                 { format!("{} {}", &self.on_input_test, &self.input_counter) }
                 </p>
+                <textinput {link.callback(|_| Msg::ThingSubmitted)} value="e"/>
             </div>
         }
     }
