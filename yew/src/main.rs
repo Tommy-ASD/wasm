@@ -6,8 +6,9 @@ enum Msg {
 }
 
 struct Model {
-    value: i64,
+    value: i32,
     on_input_test: String,
+    input_counter: i32,
 }
 
 impl Component for Model {
@@ -18,6 +19,7 @@ impl Component for Model {
         Self {
             value: 0,
             on_input_test: String::from("Hello, world!"),
+            input_counter: 0,
         }
     }
 
@@ -31,6 +33,7 @@ impl Component for Model {
             }
             Msg::ChText => {
                 self.on_input_test = String::from("inputed");
+                self.input_counter += 1;
                 true
             }
         }
@@ -44,7 +47,7 @@ impl Component for Model {
                 <button onclick={link.callback(|_| Msg::AddOne)}>{ "+1" }</button>
                 <p>{ self.value }</p>
                 <input type="text" value="he he he haw" oninput={link.callback(|_| Msg::ChText)} />
-                <p>{ &self.on_input_test }</p>
+                <p>{ format!("{} {}", &self.on_input_test, &self.input_counter) }</p>
             </div>
         }
     }
